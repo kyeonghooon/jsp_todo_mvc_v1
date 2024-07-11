@@ -25,7 +25,7 @@ public class TodoDAOImpl implements TodoDAO {
 
 	@Override
 	public void addTodo(TodoDTO dto, int principalId) {
-		String sql = " INSERT INTO todos(user_id, title, description, due_date) VALUES (?,?,?,?) ";
+		String sql = " INSERT INTO todos(user_id, title, description, due_date, completed) VALUES (?,?,?,?,?) ";
 		try (Connection conn = dataSource.getConnection()) {
 			conn.setAutoCommit(false);
 			try (PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -33,6 +33,7 @@ public class TodoDAOImpl implements TodoDAO {
 				pstmt.setString(2, dto.getTitle());
 				pstmt.setString(3, dto.getDescription());
 				pstmt.setDate(4, dto.getDueDate());
+				pstmt.setBoolean(5, dto.isCompleted());
 				pstmt.executeUpdate();
 				conn.commit();
 			} catch (Exception e) {
@@ -72,7 +73,7 @@ public class TodoDAOImpl implements TodoDAO {
 
 	@Override
 	public List<TodoDTO> getTodosByUserId(int userId) {
-		String sql = " SELECT t.* FROM todos t JOIN users u ON t.user_id = u.id WHERE u.id = ? ";
+		String sql = " SELECT * FROM todos WHERE user_id = ? ";
 		List<TodoDTO> todoList = new ArrayList<>();
 		try (Connection conn = dataSource.getConnection()) {
 			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
