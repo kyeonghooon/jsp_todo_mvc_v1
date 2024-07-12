@@ -119,7 +119,7 @@ public class UserController extends HttpServlet {
 
 		// 방어적 코드 작성
 		if (username == null || username.trim().isEmpty()) {
-			request.setAttribute("errorMessage", "사용자 이름을 입력하시오");
+			request.setAttribute("message", "사용자 이름을 입력하시오");
 			request.getRequestDispatcher(Define.PATH_VIEWS + "signUp.jsp").forward(request, response);
 			return;
 		}
